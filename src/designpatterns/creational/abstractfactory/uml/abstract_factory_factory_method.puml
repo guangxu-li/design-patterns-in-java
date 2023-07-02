@@ -1,0 +1,117 @@
+@startuml abstract_factory_factory_method
+'!pragma layout smetana
+'!theme sketchy-outline
+
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 50
+
+interface GUIFactory {
+    +createButton(): Button
+    +createCheckbox(): Checkbox
+}
+
+class LinuxGUIFactory{
+    +LinuxGUIFactory()
+    +createButton(): Button
+    +createCheckbox(): Checkbox
+}
+
+class LinuxButton {
+    +LinuxButton()
+    +paint(): void
+}
+
+class LinuxCheckbox {
+    +LinuxCheckbox()
+    +paint(): void
+}
+
+class MacOSGUIFactory {
+    +MacOSGUIFactory()
+    +createButton(): Button
+    +createCheckbox(): Checkbox
+}
+
+class MacOSButton {
+    +MacOSButton()
+    +paint(): void
+}
+
+class MacOSCheckbox {
+    +MacOSCheckbox()
+    +paint(): void
+}
+
+interface Button {
+    +paint(): void
+}
+
+interface Checkbox {
+    +paint(): void
+}
+
+class App {
+    +App()
+    +paint(factory: GUIFactory): void
+}
+
+class Demo {
+    +main(args : String[]) {static}
+}
+
+'=== layout start
+
+together {
+    class Demo
+    class App
+    interface GUIFactory
+}
+
+together {
+    class LinuxGUIFactory
+    class MacOSGUIFactory
+}
+
+together {
+    class LinuxButton
+    class MacOSButton
+}
+
+together {
+    class LinuxCheckbox
+    class MacOSCheckbox
+}
+
+together {
+    interface Button
+    interface Checkbox
+}
+
+Demo .d.> App
+App .d.> GUIFactory: <<call>>
+
+GUIFactory <|..d LinuxGUIFactory
+GUIFactory <|..d MacOSGUIFactory
+
+LinuxGUIFactory ..> LinuxButton: <<instantiate>>
+LinuxGUIFactory ..> LinuxCheckbox: <<instantiate>>
+MacOSGUIFactory ..> MacOSButton: <<instantiate>>
+MacOSGUIFactory ..> MacOSCheckbox: <<instantiate>>
+LinuxGUIFactory -[hidden]r- MacOSGUIFactory
+
+
+Button <|..u LinuxButton
+Button <|..u MacOSButton
+
+Checkbox <|..u LinuxCheckbox
+Checkbox <|..u MacOSCheckbox
+
+LinuxButton -[hidden]r- LinuxCheckbox
+LinuxCheckbox -[hidden]r- MacOSCheckbox
+MacOSCheckbox -[hidden]r- MacOSButton
+
+Checkbox -[hidden]d- Button
+
+'=== layout end
+@enduml

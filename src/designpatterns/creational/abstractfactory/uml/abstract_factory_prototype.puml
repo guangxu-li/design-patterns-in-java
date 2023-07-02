@@ -1,0 +1,100 @@
+@startuml abstract_factory_prototype
+'!pragma layout smetana
+'!theme sketchy-outline
+
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+
+class UIComponentFactory {
+    -dropdownComponentPrototype: DropdownComponent
+    -textboxComponentPrototype: TextboxComponent
+    +UIComponentFactory(DropdownComponent dropdownComponentPrototype, TextboxComponent textboxComponentPrototype)
+    +createDropdownComponent(): DropdownComponent
+    +createTextboxComponent(): TextboxComponent
+}
+
+interface Clonable {
+    +clone(): Object
+}
+
+abstract class DropdownComponent {
+    +clone(): Object
+    +paint(): void
+}
+
+class LinuxDropdownComponent {
+    +LinuxDropdownComponent()
+    +paint(): void
+}
+
+class MacOSDropdownComponent {
+    +MacOSDropdownComponent()
+    +paint(): void
+}
+
+abstract class TextboxComponent {
+    +clone(): Object
+    +paint(): void
+}
+
+class LinuxTextboxComponent {
+    +LinuxTextboxComponent()
+    +paint(): void
+}
+
+class MacOSTextboxComponent {
+    +MacOSTextboxComponent()
+    +paint(): void
+}
+
+class App {
+    +App()
+    +paint(factory: UIComponentFactory): void
+}
+
+class Demo {
+    +main(args : String[]) {static}
+}
+
+'=== layout start
+
+together {
+    class Demo
+    class App
+    interface UIComponentFactory
+    interface Clonable
+}
+
+together {
+    class LinuxDropdownComponent
+    class MacOSDropdownComponent
+}
+
+together {
+    class LinuxTextboxComponent
+    class MacOSTextboxComponent
+}
+
+together {
+    abstract class DropdownComponent
+    abstract class TextboxComponent
+    interface Clonable
+}
+
+Demo .d.> App
+App .d.> UIComponentFactory: <<call>>
+
+UIComponentFactory o--> DropdownComponent
+UIComponentFactory o--> TextboxComponent
+
+DropdownComponent ..r|> Clonable
+DropdownComponent <|-- LinuxDropdownComponent
+DropdownComponent <|-- MacOSDropdownComponent
+
+TextboxComponent ..l|> Clonable
+TextboxComponent <|-- LinuxTextboxComponent
+TextboxComponent <|-- MacOSTextboxComponent
+
+'=== layout end
+@enduml
